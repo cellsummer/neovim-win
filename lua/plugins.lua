@@ -85,18 +85,19 @@ return require("packer").startup(
         -- Float terminal
         use {
             "akinsho/nvim-toggleterm.lua",
-            -- event = "BufWinEnter",
+            event = "BufWinEnter",
             config = function()
-              require("toggleterm").setup{
-                  direction = 'float',
-                  close_on_exit = true,
-                  open_mapping = [[<A-i>]],
-                  insert_mapping = true,
-                  close_on_exit = true,
-		  float_opts = {
-			  winblend = 0,
-		  }
-              }
+		    require('lv-terminal').setup()
+		  --               require("toggleterm").setup{
+		  --                   direction = 'float',
+		  --                   close_on_exit = true,
+		  --                   open_mapping = [[<A-i>]],
+		  --                   insert_mapping = true,
+		  --                   close_on_exit = true,
+		  -- float_opts = {
+		  -- 			  winblend = 0,
+		  -- }
+		  --               }
             end,
           }
         
