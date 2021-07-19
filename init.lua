@@ -1,6 +1,7 @@
 require('lv-globals')
 require('plugins')
 require('lv-config')
+require('settings')
 -- vim.cmd("luafile " .. CONFIG_PATH .. "/lv-config.lua")
 -- require('lv-utils')
 require('lv-autocommands')
@@ -30,17 +31,3 @@ require('lsp')
 require('lsp.python-ls')
 require'lspconfig'.pyright.setup{}
 
--- Vim commands
--- Note taker
-vim.cmd 'autocmd BufWritePost *note-*.md silent !pwsh.exe -nol -nop -noni -File C:/Users/cells/Documents/Github/notetaker/buildNote.ps1 %:p'
-
--- line numbers
-vim.cmd 'set relativenumber'
-
--- Markdown Preview in Browser
-vim.cmd "autocmd BufEnter *.md noremap <F5> :!start msedge %:p<CR>"
-
--- Default shell
-vim.cmd 'set hidden'
--- vim.cmd "set shell=C:\\Progra~1\\WindowsApps\\Microsoft.PowerShell_7.1.3.0_x64__8wekyb3d8bbwe\\pwsh.exe"
--- vim.cmd 'set shellcmdflag=-command'
