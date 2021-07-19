@@ -21,6 +21,7 @@ require('lv-rnvimr')
 require('lv-which-key')
 require('lv-terminal')
 require('lv-sneak')
+-- require('lv-terminal')
 -- TODO is there a way to do this without vimscript
 -- vim.cmd('source ~/AppData/Local/nvim/vimscript/functions.vim')
 

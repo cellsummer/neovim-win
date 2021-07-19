@@ -61,7 +61,7 @@ return require("packer").startup(
         -- Explorer
         use {"kyazdani42/nvim-tree.lua", opt = true}
         -- TODO remove when open on dir is supported by nvimtree
-        use "kevinhwang91/rnvimr"
+        -- use "kevinhwang91/rnvimr"
 
         -- use {'lukas-reineke/indent-blankline.nvim', opt=true, branch = 'lua'}
         use {"lewis6991/gitsigns.nvim", opt = true}
@@ -83,23 +83,21 @@ return require("packer").startup(
         use {"romgrk/barbar.nvim", opt = true}
         
         -- Float terminal
-        use {
-            "akinsho/nvim-toggleterm.lua",
-            event = "BufWinEnter",
-            config = function()
-		    require('lv-terminal').setup()
-		  --               require("toggleterm").setup{
-		  --                   direction = 'float',
-		  --                   close_on_exit = true,
-		  --                   open_mapping = [[<A-i>]],
-		  --                   insert_mapping = true,
-		  --                   close_on_exit = true,
-		  -- float_opts = {
-		  -- 			  winblend = 0,
-		  -- }
-		  --               }
-            end,
-          }
+	use {
+		"akinsho/nvim-toggleterm.lua",
+		event = "BufWinEnter",
+		config = function()
+			require("toggleterm").setup{
+				direction = 'float',
+		          	open_mapping = [[<A-i>]],
+		          	insert_mapping = true,
+		          	close_on_exit = true,
+		          	float_opts = {
+					winblend = 0,
+		          	}
+		          }
+		end,
+	}
         
         -- Surround
         use {'tpope/vim-surround', opt = true}
@@ -109,6 +107,9 @@ return require("packer").startup(
 
         -- formatter
         -- Formatter.nvim
+	-- Formatter.nvim
+	-- use {'prettier/vim-prettier', run = 'npm install'}
+	use {'sbdchd/neoformat'}
         
         -- Markdown plugins
         use {'godlygeek/tabular', opt = true}
@@ -146,5 +147,6 @@ return require("packer").startup(
         require_plugin('vim-markdown')
         require_plugin('vim-pandoc')
         require_plugin('vim-pandoc-syntax')
+	require_plugin('nvim-toggleterm')
     end
 )
