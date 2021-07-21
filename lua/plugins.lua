@@ -107,15 +107,21 @@ return require("packer").startup(
 
         -- formatter
         -- Formatter.nvim
-	-- Formatter.nvim
-	-- use {'prettier/vim-prettier', run = 'npm install'}
-	use {'sbdchd/neoformat'}
+        -- Formatter.nvim
+        -- use {'prettier/vim-prettier', run = 'npm install'}
+        use {'sbdchd/neoformat'}
+
+        -- vimwiki
+        use {'vimwiki/vimwiki'}
         
         -- Markdown plugins
         use {'godlygeek/tabular', opt = true}
         use {'plasticboy/vim-markdown', opt = true}
         use {'vim-pandoc/vim-pandoc', opt = true}
         use {'vim-pandoc/vim-pandoc-syntax', opt = true}
+
+        -- smooth scroll
+        use {'psliwka/vim-smoothie'}
 
         require_plugin("nvim-lspconfig")
         require_plugin("lspsaga.nvim")

@@ -94,7 +94,7 @@ gls.left[5] = {
     DiffModified = {
         provider = 'DiffModified',
         condition = condition.hide_in_width,
-        icon = ' 柳',
+        icon = '  ',
         highlight = {colors.blue, colors.bg}
     }
 }
@@ -104,6 +104,30 @@ gls.left[6] = {
         condition = condition.hide_in_width,
         icon = '  ',
         highlight = {colors.red, colors.bg}
+    }
+}
+
+-- add directory and file name
+-- gls.left[7] = {
+--   FileName = {
+--     provider = function()
+--       local fname = require("galaxyline.provider_fileinfo").get_current_file_name("*")
+--       return fname
+--     end,
+--     condition = condition.hide_in_width or condition.buffer_not_empty,
+--     icon = '  ',
+--     highlight = {colors.grey, colors.bg}
+-- 
+--   }
+-- }
+gls.left[7] = {
+    current_dir = {
+        provider = function()
+            local dir_name = vim.fn.expand("%:p:h")
+            return dir_name
+        end,
+        icon = '  ',
+        highlight = {colors.grey, colors.bg}
     }
 }
 
@@ -140,28 +164,28 @@ gls.right[6] = {
     }
 }
 
+-- gls.right[7] = {
+--     PerCent = {
+--         provider = 'LinePercent',
+--         separator = ' ',
+--         separator_highlight = {'NONE', colors.bg},
+--         highlight = {colors.grey, colors.bg}
+--     }
+-- }
+
+-- gls.right[8] = {
+--     Tabstop = {
+--         provider = function()
+--             return "Spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth") .. " "
+--         end,
+--         condition = condition.hide_in_width,
+--         separator = ' ',
+--         separator_highlight = {'NONE', colors.bg},
+--         highlight = {colors.grey, colors.bg}
+--     }
+-- }
+
 gls.right[7] = {
-    PerCent = {
-        provider = 'LinePercent',
-        separator = ' ',
-        separator_highlight = {'NONE', colors.bg},
-        highlight = {colors.grey, colors.bg}
-    }
-}
-
-gls.right[8] = {
-    Tabstop = {
-        provider = function()
-            return "Spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth") .. " "
-        end,
-        condition = condition.hide_in_width,
-        separator = ' ',
-        separator_highlight = {'NONE', colors.bg},
-        highlight = {colors.grey, colors.bg}
-    }
-}
-
-gls.right[9] = {
     BufferType = {
         provider = 'FileTypeName',
         condition = condition.hide_in_width,
@@ -171,15 +195,15 @@ gls.right[9] = {
     }
 }
 
-gls.right[10] = {
-    FileEncode = {
-        provider = 'FileEncode',
-        condition = condition.hide_in_width,
-        separator = ' ',
-        separator_highlight = {'NONE', colors.bg},
-        highlight = {colors.grey, colors.bg}
-    }
-}
+-- gls.right[10] = {
+--     FileEncode = {
+--         provider = 'FileEncode',
+--         condition = condition.hide_in_width,
+--         separator = ' ',
+--         separator_highlight = {'NONE', colors.bg},
+--         highlight = {colors.grey, colors.bg}
+--     }
+-- }
 
 gls.right[11] = {
     Space = {
@@ -206,3 +230,4 @@ gls.short_line_left[2] = {
 }
 
 gls.short_line_right[1] = {BufferIcon = {provider = 'BufferIcon', highlight = {colors.grey, colors.bg}}}
+

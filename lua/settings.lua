@@ -1,4 +1,3 @@
--- ! This file is currently not sourced
 vim.cmd('set iskeyword+=-') -- treat dash separated words as a word text object"
 vim.cmd('set shortmess+=c') -- Don't pass messages to |ins-completion-menu|.
 vim.cmd('set inccommand=split') -- Make substitution work in realtime
@@ -34,6 +33,14 @@ vim.wo.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shif
 vim.o.updatetime = 300 -- Faster completion
 vim.o.timeoutlen = O.timeoutlen -- By default timeoutlen is 1000 ms
 vim.o.clipboard = "unnamedplus" -- Copy paste between vim and everything else
+-- vim wiki
+vim.cmd("let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]")
+vim.g.vimwiki_markdown_link_ext = 1
+-- vim.g.vimwiki_list = {
+--     ['path'] = '~/vimwiki/',
+--     ['syntax']= 'markdown',
+--     ['ext'] = '.md'
+-- }
 -- Vim commands
 -- Note taker
 vim.cmd 'autocmd BufWritePost *note-*.md silent !pwsh.exe -nol -nop -noni -File C:/Users/cells/Documents/Github/notetaker/buildNote.ps1 %:p'

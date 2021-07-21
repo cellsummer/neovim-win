@@ -143,6 +143,13 @@ local mappings = {
         l = {'<cmd>Pandoc -o %:p:r.tex<CR>', 'to LaTex'},
     },
 
+    w = {
+        name = '+VimWiki',
+        ct = {'<cmd>VimwikiTable<CR>', 'Create Table'},
+        co = {'<cmd>VimwikiTOC<CR>', 'Create Table of Contents'},
+        cl = {'<cmd>VimwikiToggleListItem<CR>', 'Toggle List Item'}
+    },
+
     S = {name = "+Session", s = {"<cmd>SessionSave<cr>", "Save Session"}, l = {"<cmd>SessionLoad<cr>", "Load Session"}}
 }
 
