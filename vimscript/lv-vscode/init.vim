@@ -1,9 +1,10 @@
 " packadd quickscope
 
-luafile ~/AppData/Local/nvim/lua/settings.lua
+" luafile ~/AppData/Local/nvim/lua/settings.lua
 
 if exists('g:vscode')
     nnoremap J :call VSCodeCall('cursorDown')<cr>
+    nnoremap K :call VSCodeCall('cursorUp')<cr>
 endif
 
 function! s:manageEditorSize(...)

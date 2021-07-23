@@ -83,21 +83,21 @@ return require("packer").startup(
         use {"romgrk/barbar.nvim", opt = true}
         
         -- Float terminal
-	use {
-		"akinsho/nvim-toggleterm.lua",
-		event = "BufWinEnter",
-		config = function()
-			require("toggleterm").setup{
-				direction = 'float',
-		          	open_mapping = [[<A-i>]],
-		          	insert_mapping = true,
-		          	close_on_exit = true,
-		          	float_opts = {
-					winblend = 0,
-		          	}
-		          }
-		end,
-	}
+        use {
+            "akinsho/nvim-toggleterm.lua",
+            event = "BufWinEnter",
+            config = function()
+                require("toggleterm").setup{
+                    direction = 'float',
+                    open_mapping = [[<A-i>]],
+                    insert_mapping = true,
+                    close_on_exit = true,
+                    float_opts = {
+                        winblend = 0,
+                    }
+                }
+            end,
+        }
         
         -- Surround
         use {'tpope/vim-surround', opt = true}
@@ -122,6 +122,10 @@ return require("packer").startup(
 
         -- smooth scroll
         use {'psliwka/vim-smoothie'}
+
+        -- simple fold
+        use {'tmhedberg/SimpylFold'}
+        
 
         require_plugin("nvim-lspconfig")
         require_plugin("lspsaga.nvim")
@@ -153,6 +157,6 @@ return require("packer").startup(
         require_plugin('vim-markdown')
         require_plugin('vim-pandoc')
         require_plugin('vim-pandoc-syntax')
-	require_plugin('nvim-toggleterm')
+        require_plugin('nvim-toggleterm')
     end
 )

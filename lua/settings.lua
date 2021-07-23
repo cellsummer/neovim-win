@@ -33,6 +33,7 @@ vim.wo.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shif
 vim.o.updatetime = 300 -- Faster completion
 vim.o.timeoutlen = O.timeoutlen -- By default timeoutlen is 1000 ms
 vim.o.clipboard = "unnamedplus" -- Copy paste between vim and everything else
+vim.cmd('set foldmethod=indent')
 -- vim wiki
 vim.cmd("let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]")
 vim.g.vimwiki_markdown_link_ext = 1
@@ -55,3 +56,13 @@ vim.cmd "autocmd BufEnter *.md noremap <F5> :!start msedge %:p<CR>"
 vim.cmd 'set hidden'
 -- vim.cmd "set shell=C:\\Progra~1\\WindowsApps\\Microsoft.PowerShell_7.1.3.0_x64__8wekyb3d8bbwe\\pwsh.exe"
 -- vim.cmd 'set shellcmdflag=-command'
+
+-- Neoformatter
+vim.g.neoformat_python_yapf={
+  exe = 'yapf'     
+}
+vim.g.neoformat_enabled_python = {'yapf'}
+vim.g.neoformat_basic_format_align = 1
+vim.g.neoformat_basic_format_retab = 1
+vim.g.neoformat_basic_format_trim = 1
+vim.cmd 'autocmd BufWritePre * undojoin | Neoformat'

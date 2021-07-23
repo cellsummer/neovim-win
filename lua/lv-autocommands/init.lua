@@ -2,8 +2,7 @@ local utils = require('lv-utils')
 
 local auto_formatters = {            }
 
-local python_autoformat = {'BufWritePre', '*.py', 'lua vim.lsp.buf.formatting_sync(nil, 1000)'}
-if O.python.autoformat then table.insert(auto_formatters, python_autoformat) end
+local python_autoformat = {'BufWritePre', '*.py', 'lua vim.lsp.buf.formatting_sync(nil, 1000)'} if O.python.autoformat then table.insert(auto_formatters, python_autoformat) end
 
 local javascript_autoformat = {'BufWritePre', '*.js', 'lua vim.lsp.buf.formatting_sync(nil, 1000)'}
 local javascriptreact_autoformat = {'BufWritePre', '*.jsx', 'lua vim.lsp.buf.formatting_sync(nil, 1000)'}
