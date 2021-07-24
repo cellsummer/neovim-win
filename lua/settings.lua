@@ -58,10 +58,10 @@ vim.cmd 'set hidden'
 -- vim.cmd 'set shellcmdflag=-command'
 
 -- Neoformatter
-vim.g.neoformat_python_yapf={
-  exe = 'yapf'     
-}
-vim.g.neoformat_enabled_python = {'yapf'}
+-- vim.g.neoformat_python_yapf={
+--   exe = 'yapf'     
+-- }
+vim.g.neoformat_enabled_python = {'black'}
 vim.g.neoformat_basic_format_align = 1
 vim.g.neoformat_basic_format_retab = 1
 vim.g.neoformat_basic_format_trim = 1
