@@ -29,5 +29,5 @@ require('lv-sneak')
 -- LSP
 require('lsp')
 require('lsp.python-ls')
-require'lspconfig'.pyright.setup{}
+-- require'lspconfig'.pyright.setup{}
 
