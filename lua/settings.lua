@@ -50,7 +50,7 @@ vim.cmd 'autocmd BufWritePost *note-*.md silent !pwsh.exe -nol -nop -noni -File 
 -- vim.cmd 'set relativenumber'
 
 -- Markdown Preview in Browser
-vim.cmd "autocmd BufEnter *.md noremap <F5> :!start msedge %:p<CR>"
+vim.cmd "autocmd BufEnter *.md noremap <F5> :!start msedge \"%:p\"<CR>"
 
 -- Default shell
 vim.cmd 'set hidden'

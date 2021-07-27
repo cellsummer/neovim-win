@@ -66,8 +66,14 @@ vim.api.nvim_set_keymap("v", "<leader>/", ":CommentToggle<CR>", {noremap = true,
 -- close buffer
 vim.api.nvim_set_keymap("n", "<leader>c", ":BufferClose<CR>", {noremap = true, silent = true})
 
+-- Buffer Pick
+vim.api.nvim_set_keymap("n", "<leader>j", ":BufferPick<CR>", {noremap = true, silent = true})
+
+-- Vertical Split
+vim.api.nvim_set_keymap("n", "<leader>v", ":vsplit<CR>", {noremap = true, silent = true})
+
 -- toggle terminal
-vim.api.nvim_set_keymap("n", "<leader>t", ":ToggleTerm<CR>", {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap("n", "<leader>t", ":ToggleTerm<CR>", {noremap = true, silent = true})
 -- TODO create entire treesitter section
 
 local mappings = {
