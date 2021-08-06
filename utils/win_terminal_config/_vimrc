@@ -1,0 +1,184 @@
+if &term =~ '^xterm'
+	" Cursor in terminal:
+	" Link: https://vim.fandom.com/wiki/Configuring_the_cursor
+	" 0 -> blinking block not working in wsl
+	" 1 -> blinking block
+	" 2 -> solid block
+	" 3 -> blinking underscore
+	" 4 -> solid underscore
+	" Recent versions of xterm (282 or above) also support
+	" 5 -> blinking vertical bar
+	" 6 -> solid vertical bar
+
+	" normal mode
+	let &t_EI .= "\e[2 q"
+	" insert mode
+	let &t_SI .= "\e[5 q"
+
+	augroup windows_term
+		autocmd!
+		autocmd VimEnter * silent !echo -ne "\e[1 q"
+		autocmd VimLeave * silent !echo -ne "\e[5 q"
+	augroup END
+endif
+
+" Set's
+    set nocompatible
+    set ignorecase
+    set smartcase
+    set noeb vb t_vb=
+    set shellslash
+    set encoding=utf-8
+    set backspace=indent,eol,start
+    set rnu
+    set ts=4
+    set sw=4
+    set expandtab
+    set hidden
+    set nu
+    " Enable folding
+    set foldmethod=indent
+    set foldlevel=99
+    "set clipboard=unnamedplus
+    set iskeyword+=-
+    let mapleader = " "
+
+" font and colorschema
+if has('windows')
+    "get dpi, strip out utf-16 garbage and new lines
+    let dpi = str2nr(strpart(matchstr(substitute(
+                \system('wmic desktopmonitor get PixelsPerXLogicalInch /value'),
+                \'\%x01\|\%x0a\|\%x0a\|\%xff\|\%xfe', '', 'g'),
+                \'=.*$'), 1))
+    if dpi > 100
+        set guifont=high_dpi_font
+
+    endif
+endif
+
+" Keymaps
+    " remap keys
+    inoremap jk <ESC>
+
+    " copy to the end
+    nnoremap Y yg_
+
+    " undo partially
+    inoremap , ,<C-g>u
+    inoremap . .<C-g>u
+    inoremap ! !<C-g>u
+    inoremap ? ?<C-g>u
+
+    "Moving text
+    vnoremap <silent> k  :m '<-2<CR>gv=gv
+    vnoremap <silent> j  :m '>+1<cr>gv=gv
+    inoremap <silent> k  <ESC>:m .-2<CR>==i
+    inoremap <silent> j  <ESC>:m .+1<CR>==i
+    nnoremap <silent> k  :m .-2<CR>==
+    nnoremap <silent> j :m .+1<CR>==
+
+    "split navigations
+    nnoremap <silent> <C-K> <C-W><C-K>
+    nnoremap <silent> <C-J> <C-W><C-J>
+    nnoremap <silent> <C-L> <C-W><C-L>
+    nnoremap <silent> <C-H> <C-W><C-H>
+    "better use clipboard
+    nnoremap <C-p> "*p
+
+    "All leader key mappings
+    "align by = sign
+    nnoremap <silent> <leader>a :Tabularize /=<CR>
+    "buffers
+    nnoremap <silent> <Leader>b :ls<CR>:b<Space>
+    nnoremap <silent> <Leader>c :bd<CR>
+    "Explorer
+    nnoremap <silent> <leader>e :NERDTreeToggle<CR>
+    "fix spell error: Pick the first suggestion
+    nnoremap <silent> <Leader>s 1z=<CR>
+    "split windows
+    nnoremap <silent> <Leader>v :vsplit<CR>
+
+" Vundle - Package manager
+filetype off                  " required
+" set the runtime path to include Vundle and initialize
+set rtp+=~/vimfiles/bundle/Vundle.vim
+
+call vundle#begin('$HOME/.vim/bundle')
+    " let Vundle manage Vundle, required
+    Plugin 'gmarik/Vundle.vim'
+    Plugin 'endel/vim-github-colorscheme'
+    Plugin 'tmhedberg/SimpylFold'
+    Plugin 'vim-scripts/indentpython.vim'
+    "Plugin 'Valloric/YouCompleteMe'
+    Plugin 'vim-syntastic/syntastic'
+    Plugin 'nvie/vim-flake8'
+    Plugin 'preservim/nerdtree'
+    Plugin 'joshdick/onedark.vim'
+    Plugin 'justinmk/vim-sneak'
+    Plugin 'tpope/vim-surround'
+    Plugin 'jiangmiao/auto-pairs'
+    Plugin 'vim-airline/vim-airline'
+    Plugin 'vim-airline/vim-airline-themes'
+    "Plugin 'dense-analysis/ale'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'vimwiki/vimwiki'
+    Plugin 'godlygeek/tabular'
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+
+" Plugin Config
+    colorscheme onedark
+    " AutoComplete
+    "let g:ycm_autoclose_preview_window_after_completion=1
+    "map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+    " Airline
+    let g:airline#extensions#tabline#enabled      = 1
+    let g:airline#extensions#tabline#left_sep     = ' '
+    let g:airline#extensions#tabline#left_alt_sep = '|'
+    " move among buffers with CTRL
+    map <silent> <S-k> :bnext<CR>
+    map <silent> <S-j> :bprev<CR>
+    " nerdTree
+    let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+    " ctrlP
+    let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+    if executable('ag')
+      let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+    endif
+    let g:ctrlp_map = '<c-f>'
+    let g:ctrlp_cmd = 'CtrlP'
+    "vimwiki
+    filetype plugin on
+    syntax on
+    let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+    au BufNewFile,BufRead *.md setlocal spell spelllang=en
+    " --------------------- for programming ---------------------
+    "  Syntastic
+    let g:syntastic_python_checkers = ['python']
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_always_populate_loc_list = 1
+
+    " Python specific settings
+    au BufNewFile,BufRead *.py set tabstop=4
+    au BufNewFile,BufRead *.py set softtabstop=4
+    au BufNewFile,BufRead *.py set shiftwidth=4
+    au BufNewFile,BufRead *.py set textwidth=120
+    au BufNewFile,BufRead *.py set expandtab
+    au BufNewFile,BufRead *.py set autoindent
+    au BufNewFile,BufRead *.py set fileformat=unix
+    let python_highlight_all=1
+
+    " linters and formatters
+    let g:ale_linters = {'python': ['pylint']}
+    let g:ale_fixers = {
+            \'*': ['remove_trailing_lines', 'trim_whitespace'],
+            \'python': ['black']
+            \}
+    let g:ale_fix_on_save           = 1
+    let g:ale_complettion_enabled   = 1
+    let g:ale_completion_autoimport = 1
