@@ -1,18 +1,18 @@
 if &term =~ '^xterm'
 	" Cursor in terminal:
-	" Link: https://vim.fandom.com/wiki/Configuring_the_cursor
-	" 0 -> blinking block not working in wsl
-	" 1 -> blinking block
-	" 2 -> solid block
-	" 3 -> blinking underscore
-	" 4 -> solid underscore
-	" Recent versions of xterm (282 or above) also support
-	" 5 -> blinking vertical bar
-	" 6 -> solid vertical bar
+        " Link: https://vim.fandom.com/wiki/Configuring_the_cursor
+        " 0 -> blinking block not working in wsl
+        " 1 -> blinking block
+        " 2 -> solid block
+        " 3 -> blinking underscore
+        " 4 -> solid underscore
+        " Recent versions of xterm (282 or above) also support
+        " 5 -> blinking vertical bar
+        " 6 -> solid vertical bar
 
 	" normal mode
 	let &t_EI .= "\e[2 q"
-	" insert mode
+   " insert mode
 	let &t_SI .= "\e[5 q"
 
 	augroup windows_term
@@ -24,6 +24,7 @@ endif
 
 " Set's
     set nocompatible
+    set wildmenu
     set ignorecase
     set smartcase
     set noeb vb t_vb=
@@ -35,29 +36,25 @@ endif
     set sw=4
     set expandtab
     set hidden
+    set hlsearch
     set nu
     " Enable folding
     set foldmethod=indent
-    set foldlevel=99
+    set foldlevel=1
     "set clipboard=unnamedplus
     set iskeyword+=-
     let mapleader = " "
-
-" font and colorschema
-if has('windows')
-    "get dpi, strip out utf-16 garbage and new lines
-    let dpi = str2nr(strpart(matchstr(substitute(
-                \system('wmic desktopmonitor get PixelsPerXLogicalInch /value'),
-                \'\%x01\|\%x0a\|\%x0a\|\%xff\|\%xfe', '', 'g'),
-                \'=.*$'), 1))
-    if dpi > 100
-        set guifont=high_dpi_font
-
-    endif
-endif
-
+    set spellsuggest=best,5
+    "disable swap and backup
+    set nobackup
+    set nowritebackup
+    set noswapfile
+    "Make substitution work in realtime
+    set inccommand=split
 " Keymaps
     " remap keys
+    nnoremap E $
+    nnoremap B ^
     inoremap jk <ESC>
 
     " copy to the end
@@ -70,33 +67,41 @@ endif
     inoremap ? ?<C-g>u
 
     "Moving text
-    vnoremap <silent> k  :m '<-2<CR>gv=gv
-    vnoremap <silent> j  :m '>+1<cr>gv=gv
-    inoremap <silent> k  <ESC>:m .-2<CR>==i
-    inoremap <silent> j  <ESC>:m .+1<CR>==i
-    nnoremap <silent> k  :m .-2<CR>==
-    nnoremap <silent> j :m .+1<CR>==
+    vnoremap <silent> <A-k>  :m '<-2<CR>gv=gv
+    vnoremap <silent> <A-j>  :m '>+1<cr>gv=gv
+    inoremap <silent> <A-k>  <ESC>:m .-2<CR>==i
+    inoremap <silent> <A-j>  <ESC>:m .+1<CR>==i
+    nnoremap <silent> <A-k>  :m .-2<CR>==
+    nnoremap <silent> <A-j>  :m .+1<CR>==
 
-    "split navigations
+    nnoremap <silent> <C-K> <C-W><C-K>
     nnoremap <silent> <C-K> <C-W><C-K>
     nnoremap <silent> <C-J> <C-W><C-J>
     nnoremap <silent> <C-L> <C-W><C-L>
     nnoremap <silent> <C-H> <C-W><C-H>
     "better use clipboard
     nnoremap <C-p> "*p
-
+    " Map alt-v in command-line mode to replace the commandline with the Ex
+    " command-line beneath the cursor in the buffer
+    cnoremap <A-v> <C-\>esubstitute(getline('.'), '^\s*\(' . escape(substitute(&commentstring, '%s.*$', '', ''), '*') . '\)*\s*:*' , '', '')<CR>
     "All leader key mappings
     "align by = sign
-    nnoremap <silent> <leader>a :Tabularize /=<CR>
+    nnoremap <silent> <leader>a :tabularize /=<cr>
     "buffers
     nnoremap <silent> <Leader>b :ls<CR>:b<Space>
     nnoremap <silent> <Leader>c :bd<CR>
     "Explorer
     nnoremap <silent> <leader>e :NERDTreeToggle<CR>
+    "No highlight
+    nnoremap <silent> <leader>h :noh<CR>
     "fix spell error: Pick the first suggestion
-    nnoremap <silent> <Leader>s 1z=<CR>
+    nnoremap <silent> <leader>s 1z=<CR>
     "split windows
-    nnoremap <silent> <Leader>v :vsplit<CR>
+    nnoremap <silent> <leader>v :vsplit<CR>
+
+" autocmd
+autocmd FileType python nnoremap <buffer> <F5> :update<bar>!python %<CR>
+autocmd BufNewFile,BufRead *.vb set ft=vbnet
 
 " Vundle - Package manager
 filetype off                  " required
@@ -109,9 +114,6 @@ call vundle#begin('$HOME/.vim/bundle')
     Plugin 'endel/vim-github-colorscheme'
     Plugin 'tmhedberg/SimpylFold'
     Plugin 'vim-scripts/indentpython.vim'
-    "Plugin 'Valloric/YouCompleteMe'
-    Plugin 'vim-syntastic/syntastic'
-    Plugin 'nvie/vim-flake8'
     Plugin 'preservim/nerdtree'
     Plugin 'joshdick/onedark.vim'
     Plugin 'justinmk/vim-sneak'
@@ -119,19 +121,20 @@ call vundle#begin('$HOME/.vim/bundle')
     Plugin 'jiangmiao/auto-pairs'
     Plugin 'vim-airline/vim-airline'
     Plugin 'vim-airline/vim-airline-themes'
-    "Plugin 'dense-analysis/ale'
     Plugin 'kien/ctrlp.vim'
     Plugin 'vimwiki/vimwiki'
     Plugin 'godlygeek/tabular'
+    Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+    Plugin 'preservim/nerdcommenter'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
 
 " Plugin Config
     colorscheme onedark
-    " AutoComplete
-    "let g:ycm_autoclose_preview_window_after_completion=1
-    "map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+    " commenter
+    let g:NERDCreateDefaultMappings = 0
+    map <silent>  <plug>NERDCommenterToggle
     " Airline
     let g:airline#extensions#tabline#enabled      = 1
     let g:airline#extensions#tabline#left_sep     = ' '
@@ -146,22 +149,24 @@ filetype plugin indent on    " required
     if executable('ag')
       let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
     endif
-    let g:ctrlp_map = '<c-f>'
+    let g:ctrlp_map = '<A-f>'
     let g:ctrlp_cmd = 'CtrlP'
     "vimwiki
     filetype plugin on
     syntax on
     let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
-    au BufNewFile,BufRead *.md setlocal spell spelllang=en
+    let g:vimwiki_markdown_link_ext=1
+    autocmd BufNewFile,BufRead *.md setlocal spell spelllang=en
+    autocmd bufenter *.md noremap <silent> <f5> :! start msedge "%:p"<cr>
     " --------------------- for programming ---------------------
     "  Syntastic
-    let g:syntastic_python_checkers = ['python']
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
-    let g:syntastic_auto_loc_list = 1
-    let g:syntastic_check_on_open = 1
-    let g:syntastic_always_populate_loc_list = 1
+    "let g:syntastic_python_checkers = ['flake8']
+    "set statusline+=%#warningmsg#
+    "set statusline+=%{SyntasticStatuslineFlag()}
+    "set statusline+=%*
+    "let g:syntastic_auto_loc_list = 1
+    "let g:syntastic_check_on_open = 1
+    "let g:syntastic_always_populate_loc_list = 1
 
     " Python specific settings
     au BufNewFile,BufRead *.py set tabstop=4
@@ -173,12 +178,3 @@ filetype plugin indent on    " required
     au BufNewFile,BufRead *.py set fileformat=unix
     let python_highlight_all=1
 
-    " linters and formatters
-    let g:ale_linters = {'python': ['pylint']}
-    let g:ale_fixers = {
-            \'*': ['remove_trailing_lines', 'trim_whitespace'],
-            \'python': ['black']
-            \}
-    let g:ale_fix_on_save           = 1
-    let g:ale_complettion_enabled   = 1
-    let g:ale_completion_autoimport = 1
