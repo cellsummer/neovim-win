@@ -12,6 +12,7 @@ if &term =~ '^xterm'
 
     " normal mode
     let &t_EI .= "\e[2 q"
+
    " insert mode
     let &t_SI .= "\e[5 q"
 
@@ -24,6 +25,7 @@ endif
 
 " Set's
     set nocompatible
+    set termguicolors
     set wildmenu
     set ignorecase
     set smartcase
@@ -140,6 +142,8 @@ call vundle#begin('$HOME/.vim/bundle')
     Plugin 'preservim/nerdcommenter'
     Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
+    Plugin 'ayu-theme/ayu-vim'
+    Plugin 'mhinz/vim-startify'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
@@ -178,10 +182,34 @@ filetype plugin indent on    " required
         autocmd BufWritePre * if &ft != "vimwiki" | %s/\n\+\%$//e
         autocmd BufwritePre * noh
     augroup END
-    "Snippets
-    let g:UltiSnipsExpandTrigger="<tab>"
+
     let g:UltiSnipsJumpForwardTrigger="<c-n>"
     let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+    "color
+    let ayucolor='mirage'
+    "Startify
+    let g:startify_session_dir = '~/AppData/Local/nvim/session'
+    let g:startify_change_to_vcs_root = 1
+    "Automatically Update Sessions
+    let g:startify_session_persistence = 1
+    "Get rid of empy buffer and quit
+    let g:startify_enable_special = 0
+    "Let Startify take care of buffers
+    let g:startify_session_delete_buffers = 1
+    "Menu
+    let g:startify_lists = [
+          \ { 'type': 'files',     'header': ['   Files']            },
+          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+          \ ]
+    " Bookmarks
+    let g:startify_bookmarks = [
+            \ { 'i': '~/AppData/Local/nvim/init.vim' },
+            \ { 'r': '~/Documents/Github' },
+            \ { 'w': '~/vimwiki' },
+            \ { 'b': '~/vimwiki/Blog/vuepress-deploy/blog/views' },
+            \ ]
     " --------------------- for programming ---------------------
 
     " Python specific settings
