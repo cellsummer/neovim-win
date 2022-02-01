@@ -6,8 +6,14 @@
         "html",
         "yaml",
         "json",
-        "python"
+        "python",
+        "javascriptreact",
+        "typescriptreact",
+        "typescript"
     ],
+    // typescript config
+    "tsserver.formatOnType": true,
+    "coc.preferences.formatOnType": true,
     // python config
     "python.jediEnabled": false,
     "python.linting.enabled": true,
