@@ -1,55 +1,106 @@
--- better window movement
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {silent = true})
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {silent = true})
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {silent = true})
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {silent = true})
+local opts = { noremap = true, silent = true }
+local term_opts = { silent = true }
 
--- TODO fix this
--- Terminal window navigation
-vim.cmd([[
-  tnoremap <C-h> <C-\><C-N><C-w>h
-  tnoremap <C-j> <C-\><C-N><C-w>j
-  tnoremap <C-k> <C-\><C-N><C-w>k
-  tnoremap <C-l> <C-\><C-N><C-w>l
-  inoremap <C-h> <C-\><C-N><C-w>h
-  inoremap <C-j> <C-\><C-N><C-w>j
-  inoremap <C-k> <C-\><C-N><C-w>k
-  inoremap <C-l> <C-\><C-N><C-w>l
-  tnoremap <Esc> <C-\><C-n>
-]])
+local keymap = vim.api.nvim_set_keymap
 
--- TODO fix this
--- resize with arrows
-vim.cmd([[
-  nnoremap <silent> <C-Up>    :resize -2<CR>
-  nnoremap <silent> <C-Down>  :resize +2<CR>
-  nnoremap <silent> <C-Left>  :vertical resize +2<CR>
-  nnoremap <silent> <C-Right> :vertical resize -2<CR>
-]])
+--Remap space as leader key
+keymap("", "<Space>", "<Nop>", opts)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
--- better indenting
-vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true, silent = true})
+-- Modes
+--   normal_mode = "n",
+--   insert_mode = "i",
+--   visual_mode = "v",
+--   visual_block_mode = "x",
+--   term_mode = "t",
+--   command_mode = "c",
 
--- I hate escape
-vim.api.nvim_set_keymap('i', 'jk', '<ESC>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', 'kj', '<ESC>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('i', 'jj', '<ESC>', {noremap = true, silent = true})
+-- Normal --
 
--- Tab switch buffer (done by barbar plugin)
--- vim.api.nvim_set_keymap('n', '<A-l>', ':bnext<CR>', {noremap = true, silent = true})
--- vim.api.nvim_set_keymap('n', '<A-h>', ':bprevious<CR>', {noremap = true, silent = true})
+keymap("n", "<S-e>", "$", opts)
+keymap("n", "<S-b>", "^", opts)
+keymap("n", "<S-y>", "yg_", opts)
 
--- Move selected line / block of text in visual mode
-vim.api.nvim_set_keymap('x', 'K', ':move \'<-2<CR>gv-gv', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('x', 'J', ':move \'>+1<CR>gv-gv', {noremap = true, silent = true})
+-- remap j/k to gj/gk
+keymap("n", "j", "gj", opts)
+keymap("n", "k", "gk", opts)
+keymap("n", "gj", "j", opts)
+keymap("n", "gk", "k", opts)
 
--- Better nav for omnicomplete
-vim.cmd('inoremap <expr> <c-j> (\"\\<C-n>\")')
-vim.cmd('inoremap <expr> <c-k> (\"\\<C-p>\")')
--- vim.cmd('inoremap <expr> <TAB> (\"\\<C-n>\")')
--- vim.cmd('inoremap <expr> <S-TAB> (\"\\<C-p>\")')
+-- S to search and replace
+keymap("n", "<S-s>", ":%s//g<Left><Left>", { noremap = true })
 
--- vim.api.nvim_set_keymap('i', '<C-TAB>', 'compe#complete()', {noremap = true, silent = true, expr = true})
--- use F4 for repeat actions
-vim.api.nvim_set_keymap('', '<F4>', '.', {noremap = true, silent = true})
+-- Better window navigation
+keymap("n", "<C-h>", "<C-w>h", opts)
+keymap("n", "<C-j>", "<C-w>j", opts)
+keymap("n", "<C-k>", "<C-w>k", opts)
+keymap("n", "<C-l>", "<C-w>l", opts)
+
+-- Navigate buffers
+keymap("n", "<S-k>", ":bnext<CR>", opts)
+keymap("n", "<S-j>", ":bprevious<CR>", opts)
+
+-- Move text up and down
+keymap("n", "<A-j>", ":m .+1<CR>==", opts)
+keymap("n", "<A-k>", ":m .-2<CR>==", opts)
+
+-- Clipboard
+keymap("n", "<C-p>", '"*p', opts)
+
+-- Buffer operation
+keymap("n", "<leader>c", ":bd<CR>", opts)
+keymap("n", "<leader>e", ":NERDTreeToggle<CR>", opts)
+keymap("n", "<leader>tf", ":NERDTreeFind<CR>", opts)
+keymap("n", "<leader>t", ":VimwikiToggleListItem<CR>", opts)
+
+-- No highlight
+keymap("n", "<leader>h", ":noh<CR>", opts)
+
+-- Quick fix spelling
+keymap("n", "<leader>s", "1z=<CR>", opts)
+
+-- Split window vertically
+keymap("n", "<leader>v", ":vsplit<CR>", opts)
+
+-- F8 to paste timestamp
+keymap("n", "<F8>", '"=strftime("%c")<CR>p', opts)
+
+-- Insert --
+
+-- Press jk fast to enter
+keymap("i", "jk", "<ESC>", opts)
+
+-- undo partially
+keymap("i", ",", ",<C-g>u", opts)
+keymap("i", ".", ".<C-g>u", opts)
+keymap("i", "?", "?<C-g>u", opts)
+keymap("i", "!", "!<C-g>u", opts)
+
+-- F8 to paste timestamp
+keymap("i", "<F8>", '<C-R>=strftime("%c")<CR>', opts)
+
+-- Paste
+keymap("i", "<C-v>", "<C-r>*<ESC>", opts)
+
+-- Visual --
+-- Stay in indent mode
+keymap("v", "<", "<gv", opts)
+keymap("v", ">", ">gv", opts)
+
+-- Move text up and down
+keymap("v", "<A-j>", ":m .+1<CR>gv=gv", opts)
+keymap("v", "<A-k>", ":m .-2<CR>gv=gv", opts)
+keymap("v", "p", '"_dP', opts)
+
+-- Visual Block --
+-- Move text up and down
+keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
+keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
+keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+
+-- Command Mode --
+keymap("c", "<C-v>", "<C-r>*", { noremap = true })
+-- Alt-v to paste the current line to command_mode
+-- keymap("c", "<A-v>", "<C-\>esubstitute(getline('.'), '^\s*\(' . escape(substitute(&commentstring, '%s.*$', '', ''), '*') . '\)*\s*:*' , '', '')<CR>", opts)

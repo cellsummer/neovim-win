@@ -1,162 +1,85 @@
-local execute = vim.api.nvim_command
 local fn = vim.fn
 
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
+-- Automatically install packer
+local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 if fn.empty(fn.glob(install_path)) > 0 then
-    execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-    execute "packadd packer.nvim"
+  PACKER_BOOTSTRAP = fn.system {
+    "git",
+    "clone",
+    "--depth",
+    "1",
+    "https://github.com/wbthomason/packer.nvim",
+    install_path,
+  }
+  print "Installing packer close and reopen Neovim..."
+  vim.cmd [[packadd packer.nvim]]
 end
 
---- Check if a file or directory exists in this path
-local function require_plugin(plugin)
-    local plugin_prefix = fn.stdpath("data") .. "/site/pack/packer/opt/"
+-- Autocommand that reloads neovim whenever you save the plugins.lua file
+vim.cmd [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+  augroup end
+]]
 
-    local plugin_path = plugin_prefix .. plugin .. "/"
-    --	print('test '..plugin_path)
-    local ok, err, code = os.rename(plugin_path, plugin_path)
-    if not ok then
-        if code == 13 then
-            -- Permission denied, but it exists
-            return true
-        end
-    end
-    --	print(ok, err, code)
-    if ok then
-        vim.cmd("packadd " .. plugin)
-    end
-    return ok, err, code
+-- Use a protected call so we don't error out on first use
+local status_ok, packer = pcall(require, "packer")
+if not status_ok then
+  return
 end
 
-vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when there are changes in plugins.lua
+-- Have packer use a popup window
+packer.init {
+  display = {
+    open_fn = function()
+      return require("packer.util").float { border = "rounded" }
+    end,
+  },
+}
 
-return require("packer").startup(
-    function(use)
-        -- Packer can manage itself as an optional plugin
-        use "wbthomason/packer.nvim"
-
-        -- TODO refactor all of this (for now it works, but yes I know it could be wrapped in a simpler function)
-        use {"neovim/nvim-lspconfig", opt = true}
-        use {"glepnir/lspsaga.nvim", opt = true}
-        use {"kabouzeid/nvim-lspinstall", opt = true}
-
-        -- Telescope
-        use {"nvim-lua/popup.nvim", opt = true}
-        use {"nvim-lua/plenary.nvim", opt = true}
-        use {"nvim-telescope/telescope.nvim", opt = true}
-        use {"nvim-telescope/telescope-fzy-native.nvim", opt = true}
-
-        -- Debugging
-        use {"mfussenegger/nvim-dap", opt = true}
-
-        -- Autocomplete
-        use {"hrsh7th/nvim-compe", opt = true}
-        use {"hrsh7th/vim-vsnip", opt = true}
-        use {"rafamadriz/friendly-snippets", opt = true}
-
-        -- Treesitter
-        use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
-        use {"windwp/nvim-ts-autotag", opt = true}
-
-        -- Explorer
-        use {"kyazdani42/nvim-tree.lua", opt = true}
-        -- TODO remove when open on dir is supported by nvimtree
-        -- use "kevinhwang91/rnvimr"
-
-        -- use {'lukas-reineke/indent-blankline.nvim', opt=true, branch = 'lua'}
-        use {"lewis6991/gitsigns.nvim", opt = true}
-        -- use {"liuchengxu/vim-which-key", opt = true}
-        use {"folke/which-key.nvim", opt = true}
-        use {"ChristianChiarulli/dashboard-nvim", opt = true}
-        use {"windwp/nvim-autopairs", opt = true}
-        use {"terrortylor/nvim-comment", opt = true}
-        use {"kevinhwang91/nvim-bqf", opt = true}
-
-        -- Color
-        use {"christianchiarulli/nvcode-color-schemes.vim", opt = true}
-
-        -- Icons
-        use {"kyazdani42/nvim-web-devicons", opt = true}
-
-        -- Status Line and Bufferline
-        use {"glepnir/galaxyline.nvim", opt = true}
-        use {"romgrk/barbar.nvim", opt = true}
-        
-        -- Float terminal
-        use {
-            "akinsho/nvim-toggleterm.lua",
-            event = "BufWinEnter",
-            config = function()
-                require("toggleterm").setup{
-                    direction = 'float',
-                    open_mapping = [[<A-i>]],
-                    insert_mapping = true,
-                    close_on_exit = true,
-                    float_opts = {
-                        winblend = 0,
-                    }
-                }
-            end,
-        }
-        
-        -- Surround
-        use {'tpope/vim-surround', opt = true}
-        
-        -- sneak: better motion
-        use {'justinmk/vim-sneak', opt = true}
-
-        -- formatter
-        -- Formatter.nvim
-        -- Formatter.nvim
-        -- use {'prettier/vim-prettier', run = 'npm install'}
-        use {'sbdchd/neoformat'}
-
-        -- vimwiki
-        use {'vimwiki/vimwiki'}
-        
-        -- Markdown plugins
-        use {'godlygeek/tabular', opt = true}
-        use {'plasticboy/vim-markdown', opt = true}
-        use {'vim-pandoc/vim-pandoc', opt = true}
-        use {'vim-pandoc/vim-pandoc-syntax', opt = true}
-
-        -- smooth scroll
-        use {'psliwka/vim-smoothie'}
-
-        -- simple fold
-        use {'tmhedberg/SimpylFold'}
-        
-
-        require_plugin("nvim-lspconfig")
-        require_plugin("lspsaga.nvim")
-        require_plugin("nvim-lspinstall")
-        require_plugin("friendly-snippets")
-        require_plugin("popup.nvim")
-        require_plugin("plenary.nvim")
-        require_plugin("telescope.nvim")
-        require_plugin("nvim-dap")
-        require_plugin("nvim-compe")
-        require_plugin("vim-vsnip")
-        require_plugin("nvim-treesitter")
-        require_plugin("nvim-ts-autotag")
-        require_plugin("nvim-tree.lua")
-        require_plugin("gitsigns.nvim")
-        require_plugin("which-key.nvim")
-        require_plugin("dashboard-nvim")
-        require_plugin("nvim-autopairs")
-        require_plugin("nvim-comment")
-        require_plugin("nvim-bqf")
-        require_plugin("nvcode-color-schemes.vim")
-        require_plugin("nvim-web-devicons")
-        require_plugin("galaxyline.nvim")
-        require_plugin("barbar.nvim")
-        require_plugin('toggleterm')
-        require_plugin('vim-surround')
-        require_plugin('vim-sneak')
-        require_plugin('tabular')
-        require_plugin('vim-markdown')
-        require_plugin('vim-pandoc')
-        require_plugin('vim-pandoc-syntax')
-        require_plugin('nvim-toggleterm')
-    end
-)
+-- Install your plugins here
+return packer.startup(function(use)
+  -- My plugins here
+  use { "wbthomason/packer.nvim" }
+  use { "}nvim-lua/popup.nvim" }
+  use { "nvim-lua/plenary.nvim" }
+  use { 'endel/vim-github-colorscheme'}
+  use { 'preservim/nerdtree'}
+  use { 'joshdick/onedark.vim'}
+  use { 'folke/tokyonight.nvim'}
+  use { 'EdenEast/nightfox.nvim'}
+  use { 'justinmk/vim-sneak'}
+  use { 'tpope/vim-surround'}
+  use { 'jiangmiao/auto-pairs'}
+  use { 'vim-airline/vim-airline'}
+  use { 'vim-airline/vim-airline-themes'}
+  use { 'kien/ctrlp.vim'}
+  use { 'vimwiki/vimwiki'}
+  use { 'godlygeek/tabular'}
+  use { 'preservim/nerdcommenter'}
+  use { 'ayu-theme/ayu-vim'}
+  use { 'mhinz/vim-startify'}
+  use { 'mhinz/vim-janah'}
+  use { 'chrisbra/csv.vim'}
+  use { 'g2boojum/vim-pweave'}
+  use { 'neovim/nvim-lspconfig'}
+  use { 'williamboman/nvim-lsp-installer'}
+  use { "jose-elias-alvarez/null-ls.nvim"}
+  use { 'hrsh7th/cmp-nvim-lsp'}
+  use { 'hrsh7th/cmp-buffer'}
+  use { 'hrsh7th/cmp-path'}
+  use { 'hrsh7th/cmp-cmdline'}
+  use { 'hrsh7th/nvim-cmp'}
+  use { 'L3MON4D3/LuaSnip'}
+  use { 'saadparwaiz1/cmp_luasnip'}
+  use {
+        "nvim-treesitter/nvim-treesitter",
+        run = ":TSUpdate",
+      }
+  -- Automatically set up your configuration after cloning packer.nvim
+  -- Put this at the end after all plugins
+  if PACKER_BOOTSTRAP then
+    require("packer").sync()
+  end
+end)
